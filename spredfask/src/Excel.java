@@ -19,7 +19,8 @@ public class Excel {
 		return sb.reverse().toString();
 	}	
 	public static void main(String[] args) {
-		Arrays.asList(702, 18277, 18278)
-			  .forEach(n -> System.out.println(String.format("%d excel label is %s", n, convert2Title(n))));
+		Arrays.asList(702, 18277, 18278).stream()
+			  .map(n -> String.format("%d excel label is %s", n, convert2Title(n)))
+			  .forEach(System.out::println);
 	}
 }

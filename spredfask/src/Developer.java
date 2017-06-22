@@ -37,9 +37,9 @@ public class Developer {
 		Developer d1 = new Developer(new String[]{"PHP", "Java", "Bash"});
 		Developer d2 = new Developer(new String[]{"Java", "Python"});
 		Developer d3 = new Developer(new String[]{"JavaScript", "TypeScript"});
-		Collection<Developer> developers = Arrays.asList(d1, d2, d3);		
+		Collection<Developer> developers = Arrays.asList(d1, d2, d3);	
 		
 		Collection<String> languages = Developer.getAllProgrammingLanguage(developers);
-		languages.forEach(language -> System.out.println(language));
+		languages.forEach(System.out::println);
 	}
 }
