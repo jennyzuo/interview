@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    Checkbox: <input type="checkbox" id="myCheck" value="amazon" onclick="change()">
+
+    <button onclick="check()">Check Checkbox</button>
+    <button onclick="uncheck()">Uncheck Checkbox</button>
+
+    <div action="#" method="post" class="demoForm" id="demoForm">
+        <fieldset>
+            <legend>Demo: Get Value of Selected</legend>
+
+            <p>Select a shipping method:</p>
+            <p>
+                <label><input type="radio" name="ship" value="std" checked=""> Standard Ground</label>
+                <label><input type="radio" name="ship" value="2day"> Second Day</label>
+                <label><input type="radio" name="ship" value="1day"> Overnight</label>
+                <label><input type="radio" name="ship" value="hold"> Pick up</label>
+            </p>
+
+            <p><button type="button" name="getVal">Get Value of Selected</button></p>
+            <p><button type="button" name="setVal">set Value of Selected</button></p>
+
+        </fieldset>
+    </div>
+
+    <select id="ddlViewBy">
+        <option value="1">test1</option>
+        <option value="2" selected="selected">test2</option>
+        <option value="3">test3</option>
+    </select>
+    <button type="button" name="readVal">read Value of Selected</button>
+    <button type="button" name="setSelectVal">read Value of Selected</button>
+
+    <script>
+        function change() {
+            const d = document.getElementById("myCheck");
+            console.log('..', d.checked, d.value);
+        }
+        document.getElementById("myCheck").addEventListener('click', function (e) {
+            console.log('ev', this.checked, this.value);
+        });
+        function check() {
+            document.getElementById("myCheck").checked = true;
+        }
+
+        function uncheck() {
+            document.getElementById("myCheck").checked = false;
+        }
+
+        document.getElementsByName('getVal')[0].onclick = function () {
+            var radios = document.getElementsByName('ship');
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    console.log(radios[i].value);
+                    break;
+                }
+            }
+        }
+        document.getElementsByName('setVal')[0].onclick = function () {
+            var radios = document.getElementsByName('ship');
+            radios[2].checked = true;
+        }
+        
+        
+        document.getElementsByName('readVal')[0].onclick = function() {
+            let d = document.getElementById('ddlViewBy').value;
+            console.log(d);
+        }
+        
+        document.getElementsByName('setSelectVal')[0].onclick = function() {
+            document.getElementById('ddlViewBy').value = 3;
+        }
+    </script>
+
+</body>
+
+</html>

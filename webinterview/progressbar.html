@@ -1,0 +1,83 @@
+<!--html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<body>
+    <br><br>
+    <form name=loading>
+        <p align=center>
+            <font color="green" size="2" face="Arial Black">Please wait, Loading......</font>
+            <br><br>
+            <input type=text name=progress size=55 style="font-family:Arial Black;
+                font-weight:bolder; color:green; background-color:#fef4d0; padding:0px;
+                border-style:none;">
+            <br><br>
+            <input type=text name=percent size=50 style="font-family:Arial Black;
+                color:green; text-align:center; border-width:medium; border-style:none;">
+            <script language="JavaScript">
+                var loadingPercent = 0;
+                var mark = "||";
+                var sum = "||";
+                count();
+                function count() {
+                    loadingPercent = loadingPercent + 2;
+                    sum = sum + mark;
+                    document.loading.progress.value = sum;
+                    document.loading.percent.value = loadingPercent + "%";
+                    if (loadingPercent < 99) {
+                        setTimeout("count()", 100);
+                    }
+                    else {
+                        //window.location.href = "http://www.amazon.com";
+                    }
+                }
+            </script>
+        </p>
+        Download from finelybook 48 www.finelybook.com
+    </form>
+</body>
+</html-->
+<!DOCTYPE html>
+<html>
+<style>
+    #myProgress {
+        width: 100%;
+        background-color: #ddd;
+    }
+
+    #myBar {
+        width: 1%;
+        height: 30px;
+        background-color: #4CAF50;
+    }
+</style>
+
+<body>
+
+    <h1>JavaScript Progress Bar</h1>
+
+    <div id="myProgress">
+        <div id="myBar"></div>
+    </div>
+
+    <br>
+    <button onclick="move()">Click Me</button>
+
+    <script>
+        function move() {
+            var elem = document.getElementById("myBar");
+            var width = 1;
+            var id = setInterval(frame, 10);
+            function frame() {
+                if (width >= 100) {
+                    clearInterval(id);
+                } else {
+                    width++;
+                    elem.style.width = width + '%';
+                }
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

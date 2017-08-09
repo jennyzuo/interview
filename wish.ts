@@ -34,7 +34,7 @@ const ans = wordbreak('catsanddog', dictset, suffixMap);
 console.log('--------');
 console.log(ans)
 
-class Node {
+export class Node {
     value;
     left;
     right;
@@ -42,7 +42,7 @@ class Node {
         this.value = value;
     }
 }
-const visitBST = root => {
+export const visitBST = root => {
     if (!!!root) return;
     visitBST(root.left);
     console.log(root.value);

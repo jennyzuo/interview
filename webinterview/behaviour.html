@@ -1,0 +1,150 @@
+Be prepared for a lot of behavioral questions: "tell me a time when...."
+- you disagreed with your manager
+- you did something innovative
+- you helped a peer
+- you had to deal with a tight deadline and couldn't deliver in time
+They want to know what you would have done differently and what you learned.
+These are really important, try to come up with different examples every time and to be prepared because these questions are probably more difficult than the technical ones and after 4 hours it's hard to answer at your best.  
+
+
+How would you build a sharable form validation component ? Show the HTML and JS.
+
+How would you implement document.querySelectorAll manually using recursion?  
+
+Was asked to do make a pyramid of an array of numbers using for loops.
+
+Given a JSON object, build a page of items from that JSON that meets specific design parameters (4 items per row, color of title, border, margins, padding all according to spec). The spec was ugly, IMO, but whatever... I was given the design specs and was not interviewing as a designer, but as a developer. Requirements included fading images in/out on mouseover, delete an item from the list, undo a deletion, etc. Additional features included sprite display from an Amazon-provided spritesheet for showing the number of stars on reviews
+
+Describe the box model. Create a drop down menu using jQuery.  
+
+When I click to this button I want it moves down 200px.  
+
+How do you detect for the first repeated character in a string? How do you detect whether or not a word is a palindrome?  
+
+Writing the code for a game that entailed an array of numbers and finding the fastest way to get to the end when the numbers were the number of steps you could move forward, and if you hit a zero, the game was over.  
+
+How would you stop a cross-site request attack?   save a token in a cookie
+
+1)write a plugin like query on the paper
+2)write a data structure queue program in javascript on the paper
+3)given 2 objects 
+var obj1 = {
+  name: "abc";
+};
+var obj2 = {
+  age: 25
+};
+
+do the interitance;
+
+4)lets have ()[]{} pattern should have open and close inorder;
+example a{abc()}[]//write a funtion to return true;
+example a{a[bc}//write a funtion to return false;
+
+5)function Test(){
+  for(var i=0; i<10;i++){
+    setTimeout[function(){
+      console.log(i);
+    },0);
+  }
+}
+Test(); //I have told the answer (i.e will display 10 in 10 times) But they have asked me to print the 1 to 10 with same code
+
+5) add(2)(5)(3);//output should be 10  
+
+Write a function that spits out the Fibonacci sequence for any number of digits.  
+
+https://www.linkedin.com/pulse/preparing-front-end-web-development-interview-2017-david-shariff
+
+https://github.com/h5bp/Front-end-Developer-Interview-Questions
+
+1. CSS Box Model 2. display: none vs hidden 3. property of position 4. this 的用法 5. closure 6. How to create element and how to add them in DOM
+
+第一题，写一个1 X 4 的grid。border 1px. 占满浏览器宽度。每个cell 占25%。当浏览器宽度小于720px 时变成 2 X 2的grid。当宽度小于360px时变成4 X 1的grid. 
+第二题，写一个app。实现如下功能 add notes，edit notes，delete notes。要求notes显示在带颜色的矩形框内，并且颜色有限且可选。
+
+1. LC20 2. 给一个表格，返回表格里input的name组成的obj，例子如下
+https://instant.1point3acres.com/thread/208908/post/2236359
+ 
+返回： var fooBar = { foo : ‘', foo2 : ’', foo3 : ‘' }
+ 
+返回： var fooBarBazQux = { foo : { bar : ’', baz : { qux : ‘' } }, qux : ’' }
+
+链接: https://instant.1point3acres.com/thread/208908/post/2236359
+
+Angular 2 如何实现data binding的6.写Angularjs代码的时候有哪些需要注意的地方
+
+http://www.ruanyifeng.com/blog/2015/07/flex-examples.html
+
+
+has a few big advantages over JSON-P as well:
+
+It supports HTTP verbs other than GET
+Error handling with JSON-P is tricky or impossible. CORS has access to the HTTP status and the response body just like XHR does
+CORS supports many types of authorization (like Basic Auth or OAuth). JSON-P only supports cookies
+
+The JSONP approach is a workaround that consists of calling an external API  with a DOM <script>  tag. The <script> tag is allowed to load content from any domains without security restrictions. The targeted API needs to expose a HTTP GET endpoint and return Javascript code instead of the regular JSON data. You can use this jQuery code to dynamically call a JSONP URL:
+
+In order to retrieve the API answer from the newly included JavaScript code, jQuery automatically appends a callback argument to your URL (for example &callback=method12 ) which must be called by the JavaScript code that your API generates.
+
+To prevent cross-origin writes, check for an unguessable token in the request, known as a Cross-Site Request Forgery (CSRF) token. You must prevent cross-origin reads of pages that know this token.
+
+Proxied Iframe. This do-it-yourself technique involves including an iframe on your page from the domain you wish to communicate with.  This assumes that you are able to host pages on this other domain.  The JavaScript running in the iframe serves as a rest proxy to the server containing the resources you wish to access.  Communication between your application and the rest proxy will take place using post message.  Post message is part of the HTML5 standard, but there is also a jQuery implementation for non HTML5-compliant browsers.
+
+JSONP. This is a technique that exploits the HTML script element exception to the same-origin security policy.  Script tags can load JavaScript from a different domain and query parameters can be added to the script URI to pass information to the server hosting the script about the resources that you wish to access. The JSONP server will return JavaScript that is evaluated in the browser that calls an agreed upon JavaScript function already on the page to pass server resource data into your page.
+
+the DocumentFragment interface represents a minimal document object that has no parent. It is used as a light-weight version of Document to store a segment of a document structure comprised of nodes just like a standard document. The key difference is that because the document fragment isn't part of the actual DOM's structure, changes made to the fragment don't affect the document, cause reflow, or incur any performance impact that can occur when changes are made.
+
+
+http://www.jiuzhang.com/qa/4134/
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=282310&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26sortid%3D311
+
+https://github.com/BersaKAIN/notes/blob/master/behavioral_questions.md
+a. 你有没有遇到过deadline来不及的情况，你怎么解决的。
+b. 你发现你组里一个组员的任务实际上来不及赶上deadline了，你懂他负责的这块，
+他可能没有你懂，却以为来得及。你们的老板不清楚情况，你该怎么做。
+c. 你想用A方法来实现你负责的这块任务，你老板让你用B方法，但你觉得其实A方法更
+好，你怎么办。
+d. 你遇到一个问题，有方案A和方案B，必须选一个。它们互有利弊。你时间有限，无
+法花太多时间考虑，你应该怎么做。
+
+https://business.tutsplus.com/articles/behavioral-interview-questions-and-answers--cms-27647
+https://www.thebalance.com/job-interview-questions-and-answers-2061204
+
+Build relationship with co-worker.
+Disagree with Group decision
+Why hire you
+Disagree with boss
+Can't meet deadline
+Could done better
+Significant improvmenet ever
+
+I once disagreed with my boss over how to best help a customer. Rather than question his authority in front of everyone, I talked to him off of the floor. I was open and honest about the problems I had with the way he wanted to do things. It turned out that there was just a simple misunderstanding. That disagreement we had showed me the importance of communicating with my coworkers to make sure that something obsolete doesn’t become a bigger problem than it needs to be.
+
+Remember that hiring managers are looking for someone that will fit in at their company. Try and answer in a way that will show your better qualities.
+
+'Conflicting deadlines are a normal occupational hazard. I resolve the conflict by using the time frames as the reference, and scheduling for completion according to needs. I schedule within the deadlines, so I work ahead of them.
+I break the jobs into schedules, and complete each job systematically, so I stay organized, and on time. It's an effective method of dealing with conflicting deadlines.
+In some cases, the deadlines can't be resolved like this. In those cases I ask for guidance from management.'
+
+(2) why amazon/why AWS.
+(3) 任务完成不了怎么应付，如何交流/怎么赶deadline/how do u deal with very tight deadline?/遇上deadline怎么办
+(4) how to deal with the last minute change of client's requirements: 1. small changes;  2. totally in another direction
+(5) 如何和Team合作完成项目，如何和组员交流。碰到困难怎么办？/和组员有分歧怎么办
+(6) 说一个你在团队中提出异议的经历？/说一个别人向你提出异议的经历？你是怎么解决的？
+(7) did you make any decision for your project without consluting your manager or teammate？why? what's the result?
+(8) 最proud的事儿
+(9) 项目和课程中哪些最感兴趣，为什么
+(10) amazon最喜欢的技术是什么，其他公司呢，然后设想一下未来的三到五年世界会变成什么样
+(11) 有没有什么是答应别人没完成的
+(12) 以前遇到的最难fix的bug，怎么发现并改正的/tell me one of the most challenge technical problems.
+(13) 碰到加班的话怎么办
+(14) 晚上oncall是否可以
+(15) 对新技术学习的热情
+(16) 你发现你组里一个组员的任务实际上来不及赶上deadline了,你懂他负责的这块,他可能没有你懂,却以为来得及.你们的老板不清楚情况,你该怎么做.
+(17) 你想用A方法来实现你负责的这块任务,你老板让你用B方法,但你觉得其实A方法更好,你怎么办. From 1point 3acres bbs
+(18) 你遇到一个问题,有方案A和方案B,必须选一个.它们互有利弊.你时间有限,无法花太多时间考虑,你应该怎么做
+(19) 列举你最近6个月看过的技术方面的书.你常看的技术blog,常去的讨论技术的网站
+
+https://monkeypengc.gitbooks.io/algo-notes/content/%E5%B8%B8%E8%A7%81%E7%9A%84behavior-questions.html

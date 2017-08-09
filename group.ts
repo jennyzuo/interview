@@ -32,10 +32,7 @@ const group = endorsements => {
         g[cur.skill].count += 1; 
         return g;
     }, {});
-    return Object.keys(g).reduce((pre, key) => {
-        pre.push(g[key]);
-        return pre;
-    }, []);
+    return Object.keys(g).map(key => g[key]);
 };
 
 let re = group(endorsements);

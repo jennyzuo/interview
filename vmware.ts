@@ -279,3 +279,31 @@ Jane,Roberts,janer@msn.com,"San Francisco, CA",0
 """Alexandra Alex"""`;
 r = cvsparser(cvs);
 console.log(r);
+
+/*2) Consider the Excel spreadsheet. How does it know how to label the columns?
+Given the column number (starting from zero) produce the label for the column.
+For example "A", "B", "C" ... "YY", "ZZ"*/
+for (let i = 0, j = 65; i < 26; i++, j++) {
+    console.log(`${i} => ${String.fromCharCode(j)}`);
+}
+console.log(Math.floor(702/26), 702%26);
+/*const convert2Title = n => {
+    if (n < 0) return;
+    let ret = String.fromCharCode(65 + n % 26);
+    if (n < 26) return ret;
+    n = Math.floor(n/26);
+    while (n > 0) {
+        ret = String.fromCharCode(65 + (n-1)%26) + ret;
+        n = Math.floor((n - 1)/26);
+    }
+    return ret;
+};*/
+const convert2Title = n => {
+    let ret = [String.fromCharCode(65 + n % 26)];
+    n = Math.floor(n/26);
+    while (n > 0) {
+        ret.push(String.fromCharCode(65 + (n - 1)%26));
+        n = Math.floor((n - 1)/26);
+    }
+    return ret.reverse().join('');
+};

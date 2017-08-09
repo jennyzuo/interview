@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Five star review</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<style>
+    .txt {
+        font-weight: bold;
+        color: yellow;
+    }
+</style>
+
+<body>
+    <div id="div">
+        <span>☆</span>
+        <span>☆</span>
+        <span>☆</span>
+        <span>☆</span>
+        <span>☆</span>
+    </div>
+
+    <!--write a function that takes two inputs (a DOM element, and a class name)
+        and returns the nearest ancestor of the element that has the specified CSS class.-->
+    <ul id="one" class="a">
+        <li class="b">I</li>
+        <li id="ii" class="c">II
+            <ul class="a b"> // RETURN
+                <li class="a b"></li>
+                <li class="c">
+                    <ul class="d"></ul>
+                </li>
+                <li id="start">START HERE</li>
+            </ul>
+        </li>
+        <li class="e"></li>
+    </ul>
+
+    <script>
+        function firstNoRepeat(arr) {
+            if (!!!arr || arr.length === 0) return;
+            const counter = arr.reduce((acc, item) => {
+                acc[item] = acc[item] || 0;
+                acc[item] += 1;
+                return acc;
+            }, new Map());
+            console.log(counter);
+            for (let i = 0; i < arr.length; i++) {
+                if (counter[arr[i]] === 1) return arr[i];
+            }
+        }
+        let a = firstNoRepeat([2, 3, 4, 5, 2, 4]);
+        console.log('a=', a);
+        
+        class Model {
+            constructor(propertis) {
+                this.propertis = Object.assign({}, propertis);
+                this.cbs = new Map();
+            }
+            get(property) {
+                return this.propertis[property];
+            }
+            set(property, value) {
+                let oldValue = {[property] : this.propertis[property]};
+                this.propertis[property] = value;
+                this.cbs.change && this.cbs.change.forEach(cb => cb(oldValue, this.propertis));
+            }
+            on(eventName, cb) {
+                this.cbs[eventName] = this.cbs[eventName] || [];
+                this.cbs[eventName].push(cb);
+                return () => this.cbs[eventName] = this.cbs[eventName].filter(c => c !== cb);        
+            }
+        };
+        const person = new Model({name : 'John'});
+        console.log(person.get('name'));
+        const unregister = person.on('change', function(oldModel, newModel) {
+            console.log(oldModel, newModel);
+        });
+        console.log(person.cbs);
+        unregister();
+        console.log(person.cbs);
+        person.set('name', 'Johny');
+        function nearest(dom, clazz) {
+            const q = [];
+            q.push(dom);
+            while (q.length > 0) {
+                let d = q.shift();
+                if (d.classList.contains(clazz)) return d.parentNode;
+                for (let i = 0; i < d.children.length; i++) {
+                    q.push(d.children[i]);
+                }
+            }
+            return null;
+        }
+        const dom = document.getElementById('one');
+        let ret = nearest(dom, 'd');
+        console.log('ancestor:', ret);
+        const spans = document.getElementsByTagName("span");
+        let flag = -1;
+        function renderStar(value) {
+            for (let i = 0; i < spans.length; i++) {
+                spans[i].innerHTML = i <= value ? '★' : '☆';
+                //spans[i].className = i <= value ? 'txt' : '';
+            }
+        }
+        onload = function () {
+            document.getElementById("div").onmouseover = function (e) {
+                if (e.target && e.target.nodeName.toUpperCase() === "SPAN") {
+                    let index = Array.prototype.indexOf.call(this.children, e.target);
+                    renderStar(index);
+                }
+            };
+
+            document.getElementById("div").onclick = function (e) {
+                if (e.target && e.target.nodeName.toUpperCase() === "SPAN") {
+                    flag = Array.prototype.indexOf.call(this.children, e.target);;
+                    renderStar(flag);
+                }
+            };
+
+            document.getElementById("div").onmouseout = function () {
+                renderStar(flag);
+            };
+        };
+    </script>
+
+</body>
+
+</html>
