@@ -465,10 +465,11 @@ class MyPromise {
     }
 }
 
+/*
 const pp = new MyPromise((resolve, reject) => {
     setTimeout(() => resolve('xyzk'), 100);
 }).then(v => console.log('pppp:', v));
-console.log('>>>>>>');
+*/
 
 function mul(str) {
     const st = [];
@@ -495,42 +496,4 @@ function mul(str) {
 }
 mul('(1, 2, 3)(4, 5, 6)(7, 8, 9)');
 
-//https://www.amne.co/challenge
-function slide(arr, k) {
-    function change(n) {
-        return n * (n + 1) / 2 - (n - 1) * n  / 2;
-    }
-    let sum = 0;
-    const q = [];
-    for (let i = 1; i < arr.length; i++) {
-        if (arr[i] > arr[i - 1]) {
-            if (q[q.length - 1] > 0) {
-                q[q.length - 1]++;
-                sum += change(q[q.length - 1]);
-            } else if (q.length === 0 || q[q.length - 1] < 0) {
-                q.push(1);
-                sum += 1;
-            }
-        } else if (arr[i] < arr[i - 1]) {
-            if (q[q.length - 1] < 0) {
-                q[q.length - 1]--;
-                sum -= change(q[q.length - 1]);
-            } else if (q.length === 0 || q[q.length - 1] > 0) {
-                q.push(-1);
-                sum -= 1;
-            }
-        }
-        if (i >= k) {
-            if (arr[i - k + 1] > arr[i - k]) {
-                sum -= change(q[0]);
-                q[0]--;
-            } else if (arr[i - k + 1] < arr[i - k]) {
-                sum += change(-q[0]);
-                q[0]++;
-            }
-            if (q[0] === 0) q.unshift();
-        }
-        if (i >= k - 1) console.log(sum);
-    }
-}
-slide([188930, 194123, 201345, 154243, 154243], 3);
+console.log('++++++++++++++');
