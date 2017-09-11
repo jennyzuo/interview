@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <style type="text/css">
+            @import url(https://fonts.googleapis.com/css?family=Roboto+Slab);
+            
+            html, body {
+                background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9Ii0wLjA5MTUwNiIgeTE9IjAuMTU4NDk0IiB4Mj0iMS4wOTE1MDYiIHkyPSIwLjg0MTUwNiI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2FkYWRlYiIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNmI4ZmIyIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNjY5OTk5Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g');                height: 100%;
+                width: 100%;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                font-family: 'Roboto Slab';
+            }
+            
+            #autocomplete-container {
+              width: 300px;
+              margin: 50px auto;
+            }
+            #autocomplete-input:focus {
+                background: rgba(0, 0, 0, 0.1);
+            }
+            #autocomplete-input {
+                background: rgba(0, 0, 0, 0);
+                width: 100%;
+                padding: 20px 15px;
+                border: 2px solid rgba(255, 255, 255, .6);
+                outline: none;
+                font-size: 20px;
+            }
+            
+            #autocomplete-results {
+              display: none;
+              width: 100%;
+              margin-top: -2px;
+            }
+            ul {
+                list-style-type: none;
+                margin-left: -40px;
+            }
+            li {
+                width: 100%;
+                padding: 20px 15px;
+                border-right: 2px solid rgba(255, 255, 255, .6);
+                border-bottom: 2px solid rgba(255, 255, 255, .6);
+                border-left: 2px solid rgba(255, 255, 255, .6);
+            }
+            li:hover {
+                background: rgba(0, 0, 0, 0.1);
+            }
+            </style>
+
+    </head>
+    <body>
+        <div id="autocomplete-container">  
+            <input type="text" autofocus="true" name="autofocus sample" 
+                placeholder="search people" id="autocomplete-input"></input>
+            <ul id="autocomplete-results"></ul>
+        </div>
+    </body>
+    <script type="text/javascript">
+        var input = document.querySelector('input');
+        var people = ['john doe', 'maria', 'paul', 'pasl', 'george', 'jimmy'];
+        var results;
+        // functions
+        function autocomplete(val) {
+            var people_return = [];
+            for (i = 0; i < people.length; i++) {
+                if (val === people[i].slice(0, val.length)) {
+                    people_return.push(people[i]);
+                }
+            }
+            return people_return;
+        }
+
+        // events
+        input.onkeyup = function(e) {
+            input_val = this.value;
+            if (input_val.length > 0) {
+                var people_to_show = [];
+                autocomplete_results = document.getElementById("autocomplete-results");
+                autocomplete_results.innerHTML = '';
+                people_to_show = autocomplete(input_val);
+                for (i = 0; i < people_to_show.length; i++) {
+                    autocomplete_results.innerHTML += '<li>' + people_to_show[i] + '</li>';
+                }
+                autocomplete_results.style.display = 'block';
+                autocomplete_results.onclick = function(e) {
+                    let index = Array.prototype.indexOf.call(this.children, e.target);
+                    console.log('index=', people_to_show[index]);
+                    input.value = people_to_show[index];
+                    autocomplete_results.style.display = 'none';
+                }
+            } else {
+                people_to_show = [];
+                autocomplete_results.innerHTML = '';
+            }
+        }
+    </script>        
+</html>

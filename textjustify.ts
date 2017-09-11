@@ -30,3 +30,4 @@ r = textJustify(['This', 'is', 'an', 'example', 'of', 'text', 'justification.'],
 r.forEach(element => {
     console.log('\'' + element + '\'');
 });
+

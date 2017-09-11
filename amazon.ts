@@ -637,8 +637,3 @@ const interval = duration => ({
         }
     })
 })
-async function print() {
-    for await (const i of interval(1000)) {
-        console.log(`${i} seconds elapsed.`);
-    }
-}
