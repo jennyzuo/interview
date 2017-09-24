@@ -655,6 +655,31 @@ function screenFit(rows, col, sentence) {
 screenFit(4, 5, ['I', 'had', 'apple', 'pie']);
 screenFit(3, 6, ['a', 'bcd', 'e']);
 
+function screenFit2(rows, col, sentences) {
+    const next = new Array(sentences.length), times = new Array(sentences.length);
+    for (let i = 0; i < sentences.length; i++) {
+        let remain = 0, time = 0, cur = i;
+        while (remain + sentences[cur].length <= col) {
+            remain += sentences[cur++].length;
+            if (remain < col) remain++;
+            if (cur == sentences.length) {
+                time++;
+                cur = 0;
+            }
+        }
+        next[i] = cur;
+        times[i] = time;
+    }
+    let res = 0, cur = 0;
+    for (let i = 0; i < rows; i++) {
+        res += times[cur];
+        cur = next[cur];
+    }
+    console.log('res=', res);
+    return res;
+}
+screenFit2(4, 5, ['I', 'had', 'apple', 'pie']);
+screenFit2(3, 6, ['a', 'bcd', 'e']);
 function longestNotRep(str) {
     const map = new Set();
     let start = 0, maxLen = 0, maxStart = 0;
@@ -677,6 +702,29 @@ function longestNotRep(str) {
     console.log(maxStart, maxLen, str.substr(maxStart, maxLen)); //'bacdefg'
 }
 longestNotRep('abcaacdeabacdefgab'); //start=9, len=7
+function longestNotRep2(str) {
+    const map = {}, maxs = [];
+    let maxLen = 0, start = 0, maxStart;
+    for (let i = 0; i < str.length; i++) {
+        let c = str.charAt(i);
+        if (map[c] > start) {
+            start = map[c];
+        } else {
+            if (i - start + 1 > maxLen) {
+                maxLen = i - start + 1;
+                maxStart = start;
+                maxs.length = 0;
+                maxs.push(start);
+            } else if (i - start + 1 === maxLen) {
+                maxs.push(start);
+            }
+        }
+        map[c] = i + 1;
+    }
+    maxs.forEach(i => console.log(str.substr(i, maxLen)));
+}
+longestNotRep2('abcaacdeabacdefgabbxylqwppl');
+
 
 function longContinuous(arr) {
     let res = 0;
@@ -743,32 +791,32 @@ function numberToWords(num) {
         const v1 = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 
             'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
         const v2 = ['Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-        let res = '';
+        let ret = [];
         if (num >= 100) {
             let ord = Math.floor(num/100);
-            res = `${v1[ord - 1]} Hundreds`;
+            ret.push(`${v1[ord - 1]} Hundreds`);
             num = num % 100;            
         }
         if (num >= 20) {
             let ord = Math.floor(num/10);
-            res = res.length > 0 ? `${res} ${v2[ord - 2]}` : `${v2[ord - 2]}`;
+            ret.push(`${v2[ord - 2]}`);
             num = num % 10;
         }
         if (num > 0) {
-            res = res.length > 0 ? `${res} ${v1[num - 1]}` : `${v1[num - 1]}`;
+            ret.push(`${v1[num - 1]}`);
         }
-        return res;
+        return ret.join(' ');
     }
-    let res = '';
+    let res = [];
     const v = ['', 'Thousand', 'Million', 'Billion'];
     for (let i = 0; i < v.length && num > 0; i++) {
         let part = num % 1000;
         if (part > 0) {
-            res = `${convertHundred(part)} ${v[i]} ${res}`;
+            res.unshift(`${convertHundred(part)} ${v[i]}`);
         }
         num = Math.floor(num / 1000);
     }
-    return res.length === 0 ? "Zero" : res;
+    return res.length === 0 ? "Zero" : res.join(' ');
 }
 r = numberToWords(123456677);
 console.log(r);
@@ -886,73 +934,166 @@ function combineMax(arr) {
 }
 combineMax([1, 50, 3, 6, 7]);//给一列数字，任意两数用+ - * /，每数用一次求可以得到的最大值
 
-//题目是给定一个2d matrix of letters和一个dictionary，找出一条path包含最多的存在于字典的word个数 讨论了半天算法，真到写code的时候时间就来不及了，test case没来得及写，也没来得及优化。
-//用了dfs backtracking 暴力解法。应该就是挂在这一轮。
+(function() {
+    class Node {
+        val;
+        children;
+        constructor(val) {
+            this.val = val;
+            this.children = [];
+        }
+    }
+    const root = new Node(0);
+    const a = new Node(1);
+    root.children.push(a);
+    const b = new Node(2);
+    root.children.push(b);
+    const c = new Node(3);
+    root.children.push(c);
+    a.children.push(new Node(4));
+    function visit(node, path) {
+        if (node.children.length === 0) {
+            path.unshift(node.val);
+            console.log(path);
+            path.shift();
+            return;
+        }
+        path.unshift(node.val);
+        node.children.forEach(n => {
+            visit(n, path);
+        });
+        path.shift();
+    }
+    visit(root, []);
+})()
+function calcauate(str) {
+    const operator = {'+' : (a, b) => a + b, '-' : (a, b) => a - b, '*' : (a, b)=>a*b, '/':(a, b)=>a/b};
+    const st = [];
+    let op = '+', n = 0;
+    for (let i = 0; i <= str.length; i++) {
+        let c = str.charAt(i);
+        if (/\d/.test(c)) {
+            n = 10 * n + parseInt(c, 10);
+        } else {
+            if (op === '+') st.push(n);
+            if (op === '-') st.push(-n);
+            if (op === '/' || op === '*') {
+                let a = st.pop();
+                st.push(operator[op](a, n));
+            }
+            n = 0;
+            op = c;
+        }
+    }
+    let r = 0;
+    while (st.length) {
+        r += st.pop();
+    }
+    return r;
+}
+r = calcauate('3+2*2');
+console.log('r=', r);
+console.log('============');
+function calcauate2(str) {
+    const operator = {'+' : (a, b) => a + b, '-' : (a, b) => a - b, '*' : (a, b)=>a*b, '/':(a, b)=>a/b};
+    const st = [], num = []; let n = 0;
+    for (let i = 0; i <= str.length; i++) {
+        let c = str.charAt(i);
+        if (/\d/.test(c)) {
+            n = 10 * n + parseInt(c, 10);
+        } else {
+            if (n > 0) num.push(n);
+            n = 0;
+            if (c === ')') {
+                while (st.length && st[st.length - 1] !== '(') {
+                    num.push(operator[st.pop()](num.pop(), num.pop()));    
+                }
+                st.pop();
+                continue;
+            }
+            if (['+', '-'].indexOf(c) >= 0 && ['*','/'].indexOf(st[st.length - 1]) >= 0) {
+                num.push(operator[st.pop()](num.pop(), num.pop()));    
+            }
+            c && st.push(c);
+        };
+    }
+    let res = 0;
+    while (st.length) {
+        num.push(operator[st.pop()](num.pop(), num.pop()));    
+    }
+    console.log(st, num);        
+}
+calcauate2('3+1+2*3');
+//calcauate2('3+(1+(2+2)*3)');
+(function() {
+    function findKthLargest(nums, k) {
+        let left = 0, right = nums.length - 1;
+        while (true) {
+            let pos = partition(nums, left, right);
+            if (pos === k - 1) return nums[pos];
+            else if (pos > k - 1) right = pos - 1;
+            else left = pos + 1;
+        }
+    }
+    function partition(nums, left, right) {
+        let pivot = nums[left], l = left + 1, r = right;
+        while (l <= r) {
+            if (nums[l] < pivot && nums[r] > pivot) {
+                [nums[l], nums[r]] = [nums[r], nums[r]];
+                l++;
+                r--;
+            }
+            if (nums[l] >= pivot) ++l;
+            if (nums[r] <= pivot) --r;
+        }
+        [nums[left], nums[r]] = [nums[r], nums[left]];
+        return r;
+    }
+    r = findKthLargest([3,2,1,5,6,4], 2);
+    console.log('r==', r);
+})();
+(function() {
+    function buyStock(arr) {
+        let min = arr[0], max = 0;
+        arr.forEach(price => {
+            min = Math.min(min, price);
+            max = Math.max(max, price - min);
+        });
+        console.log('max=', max);
+    }
+    buyStock([5, 8, 1, 3]);
+    function buyStock2(arr, money) {
+        let min = arr[0], shares = money/min, max = 0;
+        arr.forEach(price => {
+            min = Math.min(min, price);
+            if (price > min) {
+                max = Math.max(max, (price - min) * shares);
+            } else {
+                shares = money/min;
+            }
+        });
+        console.log('max shares=', max);
+    }
+    buyStock2([5, 8, 1, 3], 100);    
+})();
 
-//Design Airbnb翻译系统，就是AIRBNB在不同国家的网站用的是不同的语言，然后AIRBNB要把英语网站怎么翻译过去，要你DESIGN这个系统
-//设计是地里的经典老题做翻译系统，要求之前地里同学也提过，
-//就是有三个人，前端工程师，翻译官和用户的体验都要做好，他用了很久来解释这个题。这题我也是做了很久的准备，
-//包括他们的blog和自己公司的经验。但这个题目和面试官完全无法交流的感觉。可能是因为我没有前端经验，
-//他上来就问在这个html里怎么加一个service call然后说不用管syntax，我想那这不就一行code call后端API不就行了么，
-//然后给了点参数，他说要包含可翻译的和不可翻译的部分，那我就加上去了，然后就在API应该怎么写这讨论了五分钟，
-//不是说系统怎么design，就是这一行code要怎么写。有一种和小学生讨论的错觉，他问了很多 “这还用说” 这种类型的问题。
-//做过design的人都知道，API设计是一个整体，前中后都要考虑，光说前端应该要什么怎么能design好呢？面试官草草说赶快到下一个环节。
-//下一个环节他说你设计一下schema好了。说有一个网站是显示需要翻译的东西的，问你怎么设计table。
-//那我就说他需要什么我就给什么就好了，直接一个表里需要的column都加上，加了index和composit primary key。
-//他也没问别的。最后就说怎么能让user看翻译的东西更快，假设network很慢怎么办。这个时候已经没什么时间了，
-//我也没考虑太多，给webserver后面加了个cache，然后让internal network可以去更新这个cache然后external user只看cache不看别的。
-//现在想想都不知道应该怎么办，当时说network再慢也要make call吧，我们可以在浏览器cache一下翻译的东西能避免新的call，
-//其他的怎么样都要call 一次吧。他还是没说什么，然后就结束了。
-//，面经也提到过,因为他们家支持26+语言，每次在页面上更改信息或者添加新的页面，都需要生成不同语言的网页。
-//需要设计一个micro service，需求是要和front end decouple，就是front end engineer在更改完页面之后，不需要自己操作，
-//这个service就能自行的完成翻译。我就是这一点没有答好，我想的是，code change之后总得需要commit什么的吧，在那个时候，
-//send request 到这个service。面试官表示不能认可。我就不知道如何decouple from front end。而且最后feedback是high level都是可以的，但是具体细节不知道怎么实现的。。
-//你们一个内部的service，问我具体怎么实现的。。
-//其他部分的设计可以参考这个link http://nerds.airbnb.com/launching-airbnb-jp/
-//翻译系统。面试官问的比较细，web server怎么分工，数据库schema怎么设计，memcache放哪儿，
-//是怎么工作的，要不要设置TTL，网站响应时间大概是什么量级，等等。卤煮没啥经验，这一轮面得也一般。
-
-// 中心思想就是我爱旅游， 我喜欢不同的文化， 世界上的恐惧都是不了解造成的。（我确实爱旅游， 我确实喜欢不同文化） 
-//然后airbnb 的core value也要看看， 把自己的经历往那上扯就好
-//(有很多人不知道这两个环节如何让面试官感觉你高度认同他们家的公司文化，
-//有空可以多看看engineer blog http://nerds.airbnb.com/， 
-//里面有自己人的采访，多看看。而且也可以从blog里延伸出来一些你可以问他们的问题，这样就不会蜜汁尴尬了）
-//问题有你过去一年有没有很热情的帮助过别人，如果你下一年不愁钱了打算干啥之类，
-//有没有人对你某个观念转变产生过很大影响。卤煮最后一个问题说了个在吃的观念上的转变，然后面试官好像还挺high，
-//问我在中餐之外最喜欢吃啥，我说了个New Orleans sea food，被她听成了soul food，
-//还很热情给我推荐三藩里面有家叫Hard Knox的soul food。看来天下吃货是一家，任何时候说吃的都是个好话题。。
-//核心价值观面试两轮，问你天天玩什么，问我有过什么adventure，我说你看我这么胖，我从恶魔岛游回来了你怕不怕。
-//core value面完全就是问些莫名其妙的东西，比如你想去哪旅游。当然有一点要注意，Airbnb的优点不是在于便宜！
-//而是在于能够更好的了解local culture，不管你认不认同都要这么说……
-//describe you team 
-//how to work with disagreements
-//whats your role in a team
-//why you love traveling
-//where do you see our company in 10 years.
-//why airbnb? 哪些feature需要改进？做过什么risky的事？十年后airbnb是什么样？崇拜谁？ etc
-//behavior1：好像是和客服相关的部门？问了觉得airbnb最大的挑战是什么，还有我的旅行经历。
-//behavior2：长得像杀手leon的engineer。问了挺多问题，都是不同角度，很仔细的问了我对airbnb文化的理解，
-//我对自己的理解还有我的character是怎么和airbnb文化conform的
-//问了the most hospitable pserson you met, the biggest trade off in your project.
-//你想给空气床加什么功能？如果能给空气床减功能，你减什么？你为啥要来空气床，给俩原因？等等。
-//9) if you have a book that writes about your whole life, will you read it? why?
-//10) if you have a time machine, and you can either go back or go forth, will you choose to go back or to go forth?
-//5) where have you been to?
-//6) what will you do if you win a lottery such as Powerball?
-//7) what is the biggest fear in your life?
-//8) how do describe Airbnb to a people back to 2003?
-//why airbnb? among all the features of airbnb, what do you want to improve? 
-//之前的airbnb经历
-//对于在airbnb工作有什么顾虑吗
-//讲一个帮助其他人的事情
-//讲一个当时觉得risky的事情，从中学到了什么
-//When working in teams, describe a time you made the biggest sacrifice. Describe the best team you've worked with. 
-//Describe a company that you think is doing really well and explain why. 
-//Describe one of the creative things you have done recently.
-//为何Airbnb，描述下你自己的品质和你最admire的一个人
-//如果有一张机票可以飞去世界的任何地方，你会去哪？
-//你有什么帮助别人的经历？
-//你有什么最自豪的经历？
-//如果你现在创业，会做什么
-//你如何看待airbnb在中国的发展？
-
+//就是我喜欢用，用的多，周围的朋友用的也多，做自己喜欢用的东西很有意思，
+//然后如果朋友能看到我做出的新feature会很feeling awesome之类的。。。
+//是说有哪些可以改进新加的feature？我是说的我每次很懒，不想一条条看评论，去一个餐馆就想一个推荐菜列表，
+//如果看到菜名感兴趣再点进去可以显示和这个菜相关的评论再看。然后说你们可以用nlp做做啊，
+//评论text information retrieval啊，然后给个rank，或者一开始简单点，提供一个可以给menu里每个菜打分，然后自动就有推荐菜rank了
+//不停给数字，找中位数，但是是返回中间k个。用min max heap + list 实现，先说明白了具体的过程，
+//每次添加数字后发生的情况的几种可能性（这里，其实之前做过，都比较清楚，但是他不让我一个人说，一定要带着我走一遍这个过程。。。 
+//心好累）。之后写代码，代码比较多，有个hyper function时间不够写不完了他就问了我具体这个是干什么的，讲清楚了后，问了他问题结束。
+//1.小哥跟我聊了下C和Python区别 然后实现一个垃圾回收机制
+//given a sorted array without duplicates, find out the element whose value equals to its index
+//题是根据api写个读取数据并显示的插件，用了自己写的ajax轮子
+//再有就是一个题目，写一个前端全局监控js错误并发送给后台的东西，开始忘了window.error
+//插件可以根据数值自动生成导航栏，比如输个3，就生成含有3个item的导航栏，每次只能选中一个，选中的时候加个selected类
+//external script和inline script
+//不好意思，我不知道我模糊的描述是否引起了你的误解。三哥的意思是给一个任意长度为l的string，
+//f_odd只能找到一个最长的长度为m的substr_m，m可以小于等于l但必须是奇数。原string里可能有一个长为n的回文substr_n，
+//n大于m而且n为偶数。问题是怎么通过f_odd求得这个substr_n？
+//word ladder II word search2，不用implement trie  resveror sample
+//最后一轮是给一个set 如 {"world", "good" }, 然后各一个string, 让找出字典中所有出现的字的index， 
+//如string 是"worldbagdegood"， 然会{0， 10}

@@ -13,7 +13,6 @@ const trace = (board, i, j, road, visited, remain) => {
             road.push([dir[d][2], union(board, i, j) + ',' + union(board, x, y)]);
             visited.add(union(board, i, j) + ',' + union(board, x, y));
             if (!visited.has(union(board, x, y) + ',' + union(board, i, j))) remain--;
-            //console.log(dir[d][2] + '---', i, j,'=>',x, y, board[x][y]);
             trace(board, x, y, road, visited, remain);
             let [, v] = road.pop();
             visited.delete(v);
@@ -22,7 +21,6 @@ const trace = (board, i, j, road, visited, remain) => {
 
 };
 const findPath = (board, i, j) => {
-    //console.log(board, i, j);
     const road = [], visited = new Set();
     const dir = [[-1, 0, 'left'], [1, 0, 'right'], [0, -1, 'up'], [0, 1, 'down']];
     let remain = 2;

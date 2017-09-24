@@ -530,3 +530,272 @@ function firstMissingPositive(arr) {
 //firstMissingPositive([1,2,0]); //[3,4,-1,1]
 r = firstMissingPositive([3,4,-1,1]);
 console.log(r);
+(function() {
+    const cityMap = { '1_1' : 'AAA', '2_2' : 'BBB', '3_3' : 'CCC'};
+    function getLocationName(lat, long, callback) {
+        setTimeout(() => callback(cityMap[`${lat}_${long}`]), Math.random()*20);
+    }
+    [[1, 1], [3, 3], [2, 2]].reduce((promise, [lan, long]) => {
+        return promise.then(city => {
+            getLocationName(lan, long, city =>  console.log(city));            
+        });
+    }, Promise.resolve());
+})();
+
+(function() {
+    function addBoldTag(s, dict) {
+        const map = dict.reduce((m, word) => {
+            let i = s.indexOf(word);
+            if (i >= 0) {
+                m.push([i, i + word.length - 1]);
+            }
+            return m;
+        }, []).sort((a, b) => a[0] - b[0]);
+        const merge = [];
+        let [left, right] = map.shift();
+        for (let i = 0; i < map.length; i++) {
+            if (map[i][0] > right + 1) {
+                merge.push([left, right]);
+                [left, right] = map[i];
+            } else {
+                right = Math.max(right, map[i][1]);
+            }
+        }
+        merge.push([left, right]);
+        let pre = 0, ret = '';
+        merge.forEach(([left, right]) => {
+            ret += `${s.substring(pre, left)}<b>${s.substring(left, right + 1)}</b>`;
+            pre = right;
+        });
+        ret += s.substring(right + 1);
+        console.log(ret);
+    }
+    addBoldTag('abcxyz123', ['abc', '123']);
+    addBoldTag('aaabbcc', ['aaa', 'aab', 'bc']);
+})();
+
+(function() {
+    function maxSubArray(nums) {
+        let res = Number.MIN_VALUE, curSum = 0, left;
+        const ret = [];
+        for (let i = 0; i < nums.length; i++) {
+            let num = nums[i];
+            curSum = Math.max(curSum + num, num);
+            if (curSum > res) {
+                ret.length = 0;
+                ret.push(left);
+                res = curSum;
+            } else if (curSum === res) {
+                ret.push(left);
+            }
+            //res = Math.max(res, curSum);            
+            if (num === curSum) left = i;
+        }
+        console.log(ret);
+        return res;
+    }
+    r = maxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4, -100, 4, 2]);
+    console.log('r=', r);
+})();
+
+(function() {
+    function compare(a, b) {
+        let afile = 0, bfile = 0;
+        if (a.indexOf('/') >= 0) afile = -1;
+        if (b.indexOf('/') >= 0) bfile = -1;
+        if (afile !== bfile || (afile === bfile && afile === 0)) return bfile - afile;
+        const apath = a.split('/'), bpath = b.split('/');
+        if (apath.length !== bpath.length) return apath.length - bpath.length;
+        while (apath.length > 0) {
+            let aa = apath.shift();
+            let bb = bpath.shift();
+            if (aa !== bb) return aa.localeCompare(bb);
+        }
+        return 0;
+    }
+    r = ['cde/efg/b', 'abc', 'cde/mbc', 'cde/efg/a', 'abk'].sort((a, b) => compare(a, b));
+    console.log('sort r=', r);
+})();
+(function() {
+    function bfs(arr, i, j, dist, cnt) {
+        const m = arr.length, n = arr[0].length, visited = new Array(m),
+              dirs = [[0, -1], [-1, 0], [0, 1], [1, 0]];
+        for (let i = 0; i < m; i++) {
+            visited[i] = new Array(n);
+            visited[i].fill(false);
+        }
+        const q = [[i, j]];
+        let level = 1;
+        while (q.length) {
+            let k = q.length;
+            for (let i = 0; i < k; i++) {
+                let [row, col] = q.shift();
+                dirs.forEach(([x, y]) => {
+                    let [newX, newY] = [row + x, col + y];
+                    if (newX >= 0 && newX < m && newY >= 0 && newY < n && 
+                        arr[newX][newY] === 0 && !visited[newX][newY]) {
+                        visited[newX][newY] = true;
+                        q.push([newX, newY]);
+                        cnt[newX][newY]++;
+                        dist[newX][newY] += level;
+                    }
+                });
+            }
+            ++level;
+        }
+    }
+    function shortestDistance(arr) {
+        let buildings = 0;
+        const row = arr.length, col = arr[0].length;
+        const dist = new Array(row), cnt = new Array(row);
+        for (let i = 0; i < row; i++) {
+            dist[i] = new Array(col);
+            cnt[i] = new Array(col);
+            dist[i].fill(0);
+            cnt[i].fill(0);
+        }
+        for (let i = 0; i < row; i++) {
+            for (let j = 0; j < col; j++) {
+                if (arr[i][j] !== 1) continue;
+                buildings++;
+                bfs(arr, i, j, dist, cnt);
+            }
+        }
+        let res = Number.MAX_VALUE;
+        for (let i = 0; i < row; ++i) {
+            for (let j = 0; j < col; ++j) {
+                if (arr[i][j] === 0 && cnt[i][j] === buildings) {
+                    res = Math.min(res, dist[i][j]);
+                }
+            }
+        }
+        console.log('distance=', res);
+    }
+    shortestDistance([
+        [1, 0, 2, 0, 1],
+        [0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0]
+    ]);
+})();
+(function() {
+    const arr = [[3, 4, null, 6], [1, null], null, [7, null, 9], []];
+    class ZigzagIterator {
+        arr;
+        q;
+        constructor(arr) {
+            this.arr = arr;
+            this.q = [];
+            arr.forEach((a, i) => {
+                if (!!a && a.length > 0) this.q.push([i, 0]);
+            });
+        }
+        hasNext() {
+            return this.q.length > 0;
+        }
+        next() {
+            let [order, index] = this.q.shift();
+            const a = this.arr[order];
+            let r;
+            while (index < a.length) {
+                if (a[index] !== null) {
+                    if (r !== undefined) break;
+                    else r = index;
+                }
+                index++;
+            }
+            if (index < a.length) this.q.push([order, index]);
+            return a[r];
+        }
+    }
+    const test = new ZigzagIterator(arr);
+    while(test.hasNext()) {
+        console.log(test.next());
+    }
+})();
+(function() {
+    function findMissingRanges(arr, low, high) {
+        const ret = [];
+        let i = low, j = 0;
+        while (i < high && j < arr.length) {
+            if (i === arr[j]) {
+                i++;
+                j++;
+            } else {
+                ret.push(i === arr[j] - 1 ? `${i}` : `${i}->${arr[j] - 1}`);
+                i = arr[j] + 1;
+                j++;
+            }
+        }
+        if (i < high) ret.push(`${i}-${high}`);
+        console.log(ret);
+    }
+    findMissingRanges([0, 1, 3, 50, 75], 0, 99);
+})();
+(function() {
+    function isIncrease(str) {
+        let pre = +str[0];
+        for (let i = 1; i < str.length; i++) {
+            let c = +str[i];
+            if (c !== pre + 1) return false;
+            pre = c;
+        }
+        return  true;
+    }
+    function dfs(str) {
+        if (str.length === 0) return true;
+        if (str.length < 3) return false;
+        for (let i = 3; i <= str.length; i++) {
+            let s = str.substr(0, i);
+            if (isIncrease(s) && dfs(str.substring(i))) return true;
+        }
+        return false;
+    }
+    console.log(dfs('1234456'));
+    console.log(dfs('12456'));    
+})();
+(function() {
+    function decodeString(str) {
+        let c = '';
+        const st = [];
+        for (let i = 0; i < str.length; i++) {
+            if (str[i] !== '[' && str[i] !== ']') {
+                if (/[0-9]/.test(str[i]) && /[a-z]/.test(c)) {
+                    st.push(c);
+                    c = '';
+                }
+                c += str[i];
+            } else if (str[i] === '[') {
+                if (c.length > 0) {
+                    st.push(c);
+                    c = '';
+                }
+                st.push('[');
+            } else {
+                if (c.length > 0) {
+                    st.push(c);
+                    c = '';
+                }
+                let pre = st.pop();
+                while (st.length && st[st.length - 1] !== '[') {
+                    let cur = st.pop();
+                    pre = /[0-9]/.test(cur) ? pre.repeat(+cur) : cur + pre;
+                }
+                st.pop();
+                st.push(pre);
+            }
+        }
+        if (c.length) st.push(c);
+        console.log(st);
+    }
+    decodeString('3[a]2[bc]');
+    decodeString('3[a2[c]]');
+    decodeString('2[abc]3[cd]ef');
+})();
+/*google front end
+http://www.1point3acres.com/bbs/thread-280663-1-1.html
+http://www.1point3acres.com/bbs/thread-291644-1-1.html
+http://www.1point3acres.com/bbs/thread-133032-1-1.html
+http://www.1point3acres.com/bbs/thread-266194-1-1.html
+http://www.1point3acres.com/bbs/thread-225553-1-1.html
+http://www.1point3acres.com/bbs/thread-217122-1-1.html
+*/

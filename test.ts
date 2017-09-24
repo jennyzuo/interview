@@ -733,7 +733,6 @@ function nearlyArrayWithSameSum(arr) {
 }
 nearlyArrayWithSameSum([1.2, 2.3, 3.4]);
 
-/*
 function wizard(arr) {
     const n = arr.length, wizards = new Array(n), queue = [];
     for (let i = 0; i < n; i++) {
@@ -852,7 +851,7 @@ function minCostMaxStopK(arr, start, end, k) {
     console.log('..', min);
 }
 minCostMaxStopK([[1, 2, 4], [2, 4, 2], [4, 3, 1], [4, 5, 8], [3, 5, 1]], 1, 5, 4);
-/*
+
 class FileSystem {
     score = {};
     path = {};
@@ -902,7 +901,7 @@ r.set_value('/NC/A/MX', 300);
 console.log(r.get_value('/NA/A/MX'));
 console.log(r);
 
-/*
+
 function order(arr) {
     const counter = {}, neighbors = {};
     arr.forEach(item => {
@@ -1152,7 +1151,7 @@ function guessMachine(n) {
     console.log(totalCorrection);
 }
 guessMachine(6336);
-/*
+
 function boggleGame(board, dict) {
     class TrieNode {
         value;
@@ -1512,8 +1511,49 @@ function puzzle8(board) {
 }
 r = puzzle8([[0, 1, 3], [4, 2, 5], [7, 8, 6]]);
 console.log('r=', r);
-*/
-//考察的算法应该就类似于search in an array with unknown size。首先不断增加加速度，知道某个加速度对应的稳定速度大于等于29.然后再二分搜索。这个算法他是认可的
-//https://medium.com/airbnb-engineering/launching-airbnb-jp-in-record-time-52f8b0af965d
-//http://www.1point3acres.com/bbs/thread-146537-3-1.html
-//http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=220456&
+
+function playOneRound(n, visited, number) {
+    function dfs(index, visited, remain, ret) {
+        if (remain === 0) {
+            ret.forEach(i => visited[i] = true);
+            return true;
+        }
+        if (index >= n || (index + 1 > remain) || visited[index]) return false;
+        visited[index] = true;
+        ret.push(index);
+        if (dfs(index + 1, visited, remain - (index + 1), ret)) {
+            return true;
+        } else {
+            ret.pop();
+            visited[index] = false;
+            if (dfs(index + 1, visited, remain, ret)) {
+                return true;
+            }
+            return false;
+        }
+    }
+    const ret = [];
+    console.log('number=', number);
+    for (let i = 0; i < n; i++) {
+        if (dfs(i, visited, number, ret)) return true;
+    }
+    return false;
+}
+function simulate() {
+    return Math.floor(Math.random() * (6 - 1)) + 1;
+}
+function play(n) {
+    const visited = new Array(n);
+    visited.fill(false);
+    
+    let number = simulate() + simulate();  
+    let state;
+    while ((state = playOneRound(n, visited, number)) && visited.filter(i => i === true).length > 0) {
+        number = simulate() + simulate();
+        console.log(visited, state);
+    }
+    console.log(visited);
+    return visited.filter(i => i === true).length > 0 ? 'Lost' : 'Win';
+}
+let ret = play(9);
+console.log(ret);

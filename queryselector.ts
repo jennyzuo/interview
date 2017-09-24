@@ -501,7 +501,7 @@ function unionFind(m, n, arr) {
 }
 unionFind(3, 3, [[0,0], [0,2], [0, 1]]);
 
-/*
+
 (function() {
     function readFromFile(buf, start, count) {
         buf = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -548,21 +548,6 @@ unionFind(3, 3, [[0,0], [0,2], [0, 1]]);
     let total = readFromFile(buf, 0, 2*k);
     const slide = new Slide(buf, k);
 })();
-*/
-//https://www.careercup.com/question?id=5753762363736064 waitting
-//http://www.cnblogs.com/grandyang/p/5190419.html waitting
-//http://www.cnblogs.com/grandyang/p/5568818.html
-//http://www.cnblogs.com/grandyang/p/7098764.html
-//http://www.1point3acres.com/bbs/thread-279022-1-1.html
-//http://www.1point3acres.com/bbs/thread-279684-1-1.html 
-//https://stackoverflow.com/questions/32517315/maximal-subarray-with-length-constraint
 
-//http://www.1point3acres.com/bbs/thread-288996-1-1.html
-//http://www.1point3acres.com/bbs/thread-281171-1-1.html
-//http://www.1point3acres.com/bbs/thread-286770-1-1.html
-//http://www.1point3acres.com/bbs/thread-290500-1-1.html dasdfasdf
-//http://www.1point3acres.com/bbs/thread-277662-1-1.html
-//http://www.1point3acres.com/bbs/thread-276455-1-1.html
-//http://www.1point3acres.com/bbs/thread-274927-1-1.html
 
 
