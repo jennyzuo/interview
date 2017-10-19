@@ -575,6 +575,36 @@ console.log(r);
 })();
 
 (function() {
+    function addBoldTag(s, dict) {
+        let res = '', n = s.length, end = 0;
+        const bold = new Array(n);
+        bold.fill(false);
+        for (let i = 0; i < n; ++i) {
+            for (let word of dict) {
+                let len = word.length;
+                if (i + len <= n && s.substr(i, len) === word) {
+                    end = Math.max(end, i + len);
+                }
+            }
+            bold[i] = end > i;
+        }
+        for (let i = 0; i < n; ++i) {
+            if (!bold[i]) {
+                res += s[i];
+                continue;
+            }
+            let j = i;
+            while (j < n && bold[j]) ++j;
+            res += `<b>${s.substr(i, j - i)}</b>`;
+            i = j - 1;
+        }
+        console.log('res=', res);
+        return res;
+    }
+    addBoldTag('abcxyz123', ['abc', '123']);
+})();
+
+(function() {
     function maxSubArray(nums) {
         let res = Number.MIN_VALUE, curSum = 0, left;
         const ret = [];
@@ -791,11 +821,86 @@ console.log(r);
     decodeString('3[a2[c]]');
     decodeString('2[abc]3[cd]ef');
 })();
-/*google front end
-http://www.1point3acres.com/bbs/thread-280663-1-1.html
-http://www.1point3acres.com/bbs/thread-291644-1-1.html
-http://www.1point3acres.com/bbs/thread-133032-1-1.html
-http://www.1point3acres.com/bbs/thread-266194-1-1.html
-http://www.1point3acres.com/bbs/thread-225553-1-1.html
-http://www.1point3acres.com/bbs/thread-217122-1-1.html
-*/
+(function() {
+    function parse(str) {
+        let c = '', n = 0;
+        for (let i = 0; i < str.length; i++) {
+            if (/\d/.test(str[i])) {
+                n = 10 * n + parseInt(str[i], 10);
+            } else if (str[i] === '[') {
+                let count = 1, j = i + 1;
+                for (; j < str.length; j++) {
+                    if (str[j] === '[') count++;
+                    if (str[j] === ']') count--;
+                    if (count === 0) break;
+                }
+                let sub = parse(str.substring(i + 1, j));
+                c += sub.repeat(n) + parse(str.substring(j + 1));
+                return c;
+            } else {
+                c += str[i];
+            }
+        }
+        return c;
+    }
+    r = parse('3[a]2[bc]');
+    console.log('r====', r);
+    r = parse('3[a2[c]]');
+    console.log('r====', r);
+    
+})();
+
+(function() {
+    function lengthOfLongestSubstringKDistinct(s, k) {
+        let res = 0, left = 0, maxleft;
+        const m = {};
+        for (let i = 0; i < s.length; ++i) {
+            m[s[i]] = (m[s[i]] || 0) + 1;
+            while (Object.keys(m).length > k) {
+                m[s[left]]--;
+                if (m[s[left]] == 0) delete m[s[left]];
+                ++left;
+            }
+            //res = Math.max(res, i - left + 1);
+            if (res < i - left + 1) {
+                res = i - left + 1;
+                maxleft = left;
+            }
+        }
+        console.log(res, s.substr(maxleft, res));
+        return res;
+    }
+    lengthOfLongestSubstringKDistinct('eceba', 2);
+})();
+(function() {
+    function findRoots(roots, id) {
+        while (id !== roots[id]) {
+            roots[id] = roots[roots[id]];
+            id = roots[id];
+        }
+        return id;
+    }
+    function synonymous(arr) {
+        let index = 0;
+        const map = arr.reduce((map, [w1, w2]) => {
+            if (map[w1] == undefined) map[w1] = index++;
+            if (map[w2] === undefined) map[w2] = index++;
+            return map;
+        }, {});
+        console.log(map);
+        const roots = new Array(Object.keys(map).length);
+        for (let i = 0; i < roots.length; i++) {
+            roots[i] = i;
+        }
+        arr.forEach(([w1, w2]) => {
+            let i = map[w1], j = map[w2];
+            let rooti = findRoots(roots, i), rootj = findRoots(roots, j);
+            if (rooti !== rootj) {
+                if (rooti < rootj) roots[rootj] = rooti;
+                else roots[rooti] = rootj;
+            }
+        });
+        console.log(roots);
+    }
+    synonymous([['fast', 'quick'], ['fast', 'speedy'], ['learn', 'study']]);
+})();

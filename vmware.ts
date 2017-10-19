@@ -787,7 +787,7 @@ console.log(r);
 
 console.log('>>>>>>>>');
 function numberToWords(num) {
-    function convertHundred(num) {
+    function convertThousand(num) {
         const v1 = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 
             'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
         const v2 = ['Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
@@ -812,7 +812,7 @@ function numberToWords(num) {
     for (let i = 0; i < v.length && num > 0; i++) {
         let part = num % 1000;
         if (part > 0) {
-            res.unshift(`${convertHundred(part)} ${v[i]}`);
+            res.unshift(`${convertThousand(part)} ${v[i]}`);
         }
         num = Math.floor(num / 1000);
     }
@@ -1076,24 +1076,31 @@ calcauate2('3+1+2*3');
     }
     buyStock2([5, 8, 1, 3], 100);    
 })();
-
-//就是我喜欢用，用的多，周围的朋友用的也多，做自己喜欢用的东西很有意思，
-//然后如果朋友能看到我做出的新feature会很feeling awesome之类的。。。
-//是说有哪些可以改进新加的feature？我是说的我每次很懒，不想一条条看评论，去一个餐馆就想一个推荐菜列表，
-//如果看到菜名感兴趣再点进去可以显示和这个菜相关的评论再看。然后说你们可以用nlp做做啊，
-//评论text information retrieval啊，然后给个rank，或者一开始简单点，提供一个可以给menu里每个菜打分，然后自动就有推荐菜rank了
-//不停给数字，找中位数，但是是返回中间k个。用min max heap + list 实现，先说明白了具体的过程，
-//每次添加数字后发生的情况的几种可能性（这里，其实之前做过，都比较清楚，但是他不让我一个人说，一定要带着我走一遍这个过程。。。 
-//心好累）。之后写代码，代码比较多，有个hyper function时间不够写不完了他就问了我具体这个是干什么的，讲清楚了后，问了他问题结束。
-//1.小哥跟我聊了下C和Python区别 然后实现一个垃圾回收机制
-//given a sorted array without duplicates, find out the element whose value equals to its index
-//题是根据api写个读取数据并显示的插件，用了自己写的ajax轮子
-//再有就是一个题目，写一个前端全局监控js错误并发送给后台的东西，开始忘了window.error
-//插件可以根据数值自动生成导航栏，比如输个3，就生成含有3个item的导航栏，每次只能选中一个，选中的时候加个selected类
-//external script和inline script
-//不好意思，我不知道我模糊的描述是否引起了你的误解。三哥的意思是给一个任意长度为l的string，
-//f_odd只能找到一个最长的长度为m的substr_m，m可以小于等于l但必须是奇数。原string里可能有一个长为n的回文substr_n，
-//n大于m而且n为偶数。问题是怎么通过f_odd求得这个substr_n？
-//word ladder II word search2，不用implement trie  resveror sample
-//最后一轮是给一个set 如 {"world", "good" }, 然后各一个string, 让找出字典中所有出现的字的index， 
-//如string 是"worldbagdegood"， 然会{0， 10}
+(function() {
+    function wordsearch(arr, str) {
+        console.log(arr, str);
+        function dfs(i, j, visited, index) {
+            if (index === str.length - 1) return true;
+            const m = arr.length, n = arr[0].length, dirs = [[-1, 0], [1, 0], [0, 1], [0, -1]];
+            visited.add(i * n + j);
+            for (let k = 0; k < dirs.length; k++) {
+                let [x, y] = dirs[k], [row, col] = [x + i, y + j];
+                if (row >= 0 && row < m && col >= 0 && col < n && 
+                    !visited.has(row * n + col) && arr[row][col] === str[index + 1]) {
+                    if (dfs(row, col, visited, index + 1)) return true;
+                }
+            };
+            visited.delete(i * n + j);
+            return false;
+        }
+        const visited = new Set();
+        for (let i = 0; i < arr.length; i++) {
+            for (let j = 0; j < arr[0].length; j++) {
+                if (arr[i][j] === str[0]) {
+                    if (dfs(i, j, visited, 0)) return true;
+                }
+            }
+        }
+        return false;
+    }
+})();

@@ -474,25 +474,22 @@ function wordsearch(arr, str) {
     console.log(arr, str);
     function dfs(i, j, visited, index) {
         if (index === str.length - 1) return true;
-        visited.add(i * arr.length + j);
-        const dirs = [[-1, 0], [1, 0], [0, 1], [0, -1]];
-        for (let k = 0; k < 4; k++) {
-            let dir = dirs[k];
-            let x = i + dir[0];
-            let y = j + dir[1];
-            if (x < 0 || x >= arr.length || y < 0 || y >= arr[0].length) continue;
-            if (visited.has(x * arr.length + y)) continue;
-            if (arr[x][y] === str.charAt(index + 1)) {
-                if (dfs(x, y, visited, index + 1)) return true;
+        const m = arr.length, n = arr[0].length, dirs = [[-1, 0], [1, 0], [0, 1], [0, -1]];
+        visited.add(i * n + j);
+        for (let k = 0; k < dirs.length; k++) {
+            let [x, y] = dirs[k], [row, col] = [x + i, y + j];
+            if (row >= 0 && row < m && col >= 0 && col < n && 
+                !visited.has(row * n + col) && arr[row][col] === str[index + 1]) {
+                if (dfs(row, col, visited, index + 1)) return true;
             }
-        }
-        visited.delete(i * arr.length + j);
+        };
+        visited.delete(i * n + j);
         return false;
     }
     const visited = new Set();
     for (let i = 0; i < arr.length; i++) {
         for (let j = 0; j < arr[0].length; j++) {
-            if (arr[i][j] === str.charAt(0)) {
+            if (arr[i][j] === str[0]) {
                 if (dfs(i, j, visited, 0)) return true;
             }
         }
@@ -506,11 +503,11 @@ let matrix = [
 ];
 r = wordsearch(matrix, 'ABCCED');
 console.log(r);
-r = wordsearch(matrix, 'SEE');
+/*r = wordsearch(matrix, 'SEE');
 console.log(r);
 r = wordsearch(matrix, 'ABCB');
 console.log(r);
-
+/*
 function rev(str) {
     if (!!!str || typeof str !== 'string') return str;
     return str.split('').reverse().join('');
@@ -637,3 +634,4 @@ const interval = duration => ({
         }
     })
 })
+*/

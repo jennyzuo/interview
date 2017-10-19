@@ -15,7 +15,7 @@ class Trie {
         let parent = this.root;
         for (let char of word) {
             let node = parent.children[char];
-            if (!!!node) {
+            if (!node) {
                 node = new TrieNode(char);
                 parent.children[char] = node;              
             }
@@ -23,7 +23,42 @@ class Trie {
         }
         parent.isword = true;
     }
+    private dfs(node, tmp, ret) {
+        if (!node) return;
+        tmp.push(node.label);       
+        if (node.isword) {
+            ret.push(tmp.join(''));
+        }
+        for (let char in node.children) {
+            this.dfs(node.children[char], tmp, ret);
+        }
+        tmp.pop();
+    }
+    public collectWord(prefix) {
+        let parent = this.root;
+        const ret = [];
+        for (let i = 0; i < prefix.length; i++) {
+            let char = prefix[i], node = parent.children[char];
+            if (!node) return ret;
+            if (node.isword) ret.push(prefix.substring(0, i + 1));
+            parent = node;
+        }
+        const tmp = prefix.split('');
+        tmp.pop();
+        parent.isword = false;
+        this.dfs(parent, tmp, ret);
+        console.log(ret);
+    }
 }
+console.log('<<<<<<<<<<<<<');
+const auto = new Trie('R');
+auto.insert('abcd');
+auto.insert('abck');
+auto.insert('abc');
+auto.insert('abw');
+console.log(auto);
+auto.collectWord('abc');
+console.log('>>>>>>>>>>>>>');
 const search = (board, node, i, j, visited, res, matches) => {
     visited[i][j] = true;
     res.push(node.label);
