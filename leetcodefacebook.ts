@@ -11,6 +11,7 @@
     }
     moveZeroes([0, 1, 0, 3, 12]);
 })();
+
 (function() {
     function maxSubArrayLen(arr, k) {
         const map = {};
@@ -110,7 +111,7 @@
         console.log(map);
     }
     visit(root);
-    const ret = Object.keys(map).sort((a, b) => a - b).reduce((acc, key) => {
+    const ret = Object.keys(map).sort((a:any, b:any) => a - b).reduce((acc, key) => {
         acc.push(map[key]);
         return acc;
     }, []);
@@ -316,7 +317,7 @@
         return res;
     }
     r = inorderSuccessor(root, sub, 'pre');
-    console.log('r=', r.v);
+    console.log('r=', r);
     function inorderSuccessor2(root, p, mode) {
         if (!root) return null;
         if (root.v === p.v) {
@@ -333,7 +334,7 @@
         }
     }
     r = inorderSuccessor2(root, sub, 'pre');
-    console.log('r=', r.v);
+    console.log('r=', r);
 })();
 (function() {
     class Node {

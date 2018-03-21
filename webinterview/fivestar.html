@@ -10,6 +10,9 @@
         font-weight: bold;
         color: yellow;
     }
+    .selected {
+        background-color: grey;
+    }
 </style>
 
 <body>
@@ -36,7 +39,16 @@
         </li>
         <li class="e"></li>
     </ul>
-
+    <nav>
+        <ul id="test">
+            <!--li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li-->
+          </ul>
+    </nav>
+    <div id="demo">
+        <button type="button" onclick="loadXMLDoc()">Change Content</button>
+    </div>
     <script>
         function firstNoRepeat(arr) {
             if (!!!arr || arr.length === 0) return;
@@ -122,7 +134,59 @@
             document.getElementById("div").onmouseout = function () {
                 renderStar(flag);
             };
+            function createNav(number) {
+                const ul = document.getElementById('test');
+                let lis = '';
+                for (let i = 0; i < number; i++) {
+                    lis += `<li>${i}</li>`;
+                }
+                ul.innerHTML = lis;
+                ul.onclick = function(e) {
+                    if (e.target && e.target.nodeName.toUpperCase() === 'LI') {
+                        let index = Array.prototype.indexOf.call(this.children, e.target);
+                        this.children.forEach(node => node.className = '');
+                        /*for (let i = 0; i < number; i++) {
+                            this.children[i].className = '';
+                        }*/
+                        e.target.className = 'selected';
+                    }
+                }
+            }
+            createNav(3);
+            window.onerror = function (msg, url, lineNo, columnNo, error) {
+                var string = msg.toLowerCase();
+                var substring = "script error";
+                console.log(msg, url, lineNo, columnNo, error);
+                /*if (string.indexOf(substring) > -1){
+                    alert('Script Error: See Browser Console for Detail');
+                } else {
+                    var message = [
+                        'Message: ' + msg,
+                        'URL: ' + url,
+                        'Line: ' + lineNo,
+                        'Column: ' + columnNo,
+                        'Error object: ' + JSON.stringify(error)
+                    ].join(' - ');
+            
+                    alert(message);
+                }*/
+            
+                return false;
+            };
         };
+
+        function loadXMLDoc() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("demo").innerHTML =
+                    this.responseText;
+                }
+            };
+            xhttp.open('GET', 'https://www.w3schools.com/xml/xmlhttp_info.txt', true);
+            xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+            xhttp.send();
+        }
     </script>
 
 </body>
