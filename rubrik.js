@@ -637,3 +637,34 @@ function localMax() {
     console.log(local([1,2,3,4,5,6,5,4,3,4,5,4,3,2,1,2,1]))
 }
 localMax()
+
+function dfs(zombies, visited, x, y) {
+    if (x < 0 || x >= zombies.length) return
+    if (y < 0 || y >= zombies[0].length) return
+    if (zombies[x][y] !== '1' || visited[x][y]) return
+    visited[x][y] = true
+    dfs(zombies, visited, x - 1, y)
+    dfs(zombies, visited, x + 1, y)
+    dfs(zombies, visited, x, y - 1)
+    dfs(zombies, visited, x, y + 1)
+}
+function zombieCluster(zombies) {
+    if (zombies.length === 0 || zombies[0].length === 0) return 0
+    const m = zombies.length, n = zombies[0].length
+    let res = 0
+    const visited = new Array(m)
+    for (let i = 0; i < n; i++) {
+        visited[i] = new Array(n).fill(false)
+    }
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (zombies[i][j] === '1' && !visited[i][j]) {
+                dfs(zombies, visited, i, j)
+                res++
+            }
+        }
+    }
+    return res
+}
+r = zombieCluster(['1100', '1110', '0110', '0001'])
+console.log('r=', r)

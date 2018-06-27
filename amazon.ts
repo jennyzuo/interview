@@ -503,11 +503,11 @@ let matrix = [
 ];
 r = wordsearch(matrix, 'ABCCED');
 console.log(r);
-/*r = wordsearch(matrix, 'SEE');
+r = wordsearch(matrix, 'SEE');
 console.log(r);
 r = wordsearch(matrix, 'ABCB');
 console.log(r);
-/*
+
 function rev(str) {
     if (!!!str || typeof str !== 'string') return str;
     return str.split('').reverse().join('');
@@ -634,4 +634,3 @@ const interval = duration => ({
         }
     })
 })
-*/

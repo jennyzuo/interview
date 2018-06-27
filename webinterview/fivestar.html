@@ -23,7 +23,11 @@
         <span>☆</span>
         <span>☆</span>
     </div>
-
+    <form id="foo-bar-baz-qux" >
+        <input type="text" name="foo.bar" />
+        <input type="text" name="foo.baz.qux" />
+        <input type="text" name="qux" />
+    </form>
     <!--write a function that takes two inputs (a DOM element, and a class name)
         and returns the nearest ancestor of the element that has the specified CSS class.-->
     <ul id="one" class="a">
@@ -51,7 +55,7 @@
     </div>
     <script>
         function firstNoRepeat(arr) {
-            if (!!!arr || arr.length === 0) return;
+            if (!arr || arr.length === 0) return;
             const counter = arr.reduce((acc, item) => {
                 acc[item] = acc[item] || 0;
                 acc[item] += 1;
@@ -117,6 +121,24 @@
             }
         }
         onload = function () {
+            function merge(id) {
+                const inputs = Array.from(document.forms[id].getElementsByTagName('input'))
+                const ret = {}
+                inputs.forEach(({name}) => {
+                    const names = name.split('.')
+                    const last = names.pop()
+                    let parent = ret
+                    names.forEach(n => {
+                        if (!parent[n]) {
+                            parent[n] = {}
+                        }
+                        parent = parent[n]
+                    })
+                    parent[last] = ''
+                })
+                console.log('ret=', JSON.stringify(ret))
+            }
+            merge('foo-bar-baz-qux')
             document.getElementById("div").onmouseover = function (e) {
                 if (e.target && e.target.nodeName.toUpperCase() === "SPAN") {
                     let index = Array.prototype.indexOf.call(this.children, e.target);

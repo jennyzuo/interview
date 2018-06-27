@@ -19,6 +19,7 @@ const trace = (board, i, j, road, visited, remain) => {
         }
     }
 
+
 };
 const findPath = (board, i, j) => {
     const road = [], visited = new Set();
