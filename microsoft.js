@@ -1238,5 +1238,5 @@ function reverse2(first) {
     return h
 }
 console.log('>>>>>>')
-visitLink(reverse2(first))
+visitLink(reverse2(first));
 //reverse(first)

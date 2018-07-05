@@ -568,7 +568,7 @@ function parseStringWithoutReg(str) {
         if (str[i] === ' ' || !str[i] || (isNaN(+str[i]) && !isNaN(str[i - 1]) 
             || (!isNaN(+str[i]) && isNaN(str[i - 1])))) {
             if (tmp.length) {
-                if (Number.isInteger(tmp)) {
+                if (!isNaN(+tmp)) {
                     nums.push(tmp);
                 } else {
                     strs.push(tmp);
@@ -578,8 +578,9 @@ function parseStringWithoutReg(str) {
         }
         str[i] !== ' ' && (tmp += str[i])
     }
+    console.log('<><>?', strs);
     if (strs.length !== 2) {
-        throw new Error('Error')
+        throw new Error('Error' + str);
     }
     let [department, semester] = strs;
     if (department.slice(-1) === '-' || department.slice(-1) === ':') {
@@ -612,13 +613,10 @@ function parseStringWithoutReg(str) {
     console.log('*'.repeat(20))
 }
 try {
-    parseStringWithoutReg('CS1234 201 Spring');
+    parseStringWithoutReg('CS 1234 20218S');
 } catch(e) {
     console.log(e.message)
 }
-
-//coding question是字串大小寫生成不同組合,以及linkedlist reverse
-/*
 ['CS 1234 2018 Spring', 'CS 1234 2018Spring', 'CS 1234 2018S', 'CS 1234 18 Spring',
 'CS 1234 18Spring', 'CS 1234 18S', 'CS1234 2018 Spring', 'CS1234 2018Spring',
 'CS1234 2018S', 'CS1234 18 Spring', 'CS1234 18Spring', 'CS1234 18S',
@@ -630,7 +628,7 @@ try {
 'CS1234 S18', 'CS-1234 Spring 2018', 'CS-1234 Spring2018', 'CS-1234 Spring18',
 'CS-1234 S 2018', 'CS-1234 S2018', 'CS-1234 S18', 'CS:1234 Spring 2018', 'CS:1234 Spring2018',
 'CS:1234 Spring18', 'CS:1234 S 2018', 'CS:1234 S2018', 'CS:1234 S18'].forEach(str => parseStringWithoutReg(str));
-/*
+
 function gene() {
     const info = ['CS', '1234', '2018', 'Spring'], ret = []
     function dfs(i, str) {
@@ -806,4 +804,248 @@ function prefix(words, board) {
 }
 prefix(['oath', 'pea', 'eat', 'rain'], 
 [['o', 'a', 'a', 'n'], ['e','t','a','e'], ['i', 'h', 'k', 'r'], ['i', 'f', 'l', 'v']])
-*/
+function quantCast() {
+    function findSum(arr, sum) {
+        const map = arr.reduce((m, item) => {
+            m.set(item, m.get(item) ? m.get(item) + 1 : 1);
+            return m;
+        }, new Map());
+        const ret = [];
+        for (let [value, total] of map.entries()) {
+            if (map.has(sum - value)) {
+                let count = 0;
+                if (sum - value === value && total > 1) {
+                   count = Math.floor(total / 2);
+                } else {
+                    count = map.get(sum - value) * total;
+                }
+                while (count--) {
+                    ret.push([value, sum - value]);
+                }
+                map.set(sum-value, 0);
+                map.set(value, 0);
+            }
+        }
+        console.log(ret);
+    }
+    findSum([2, 1, 4, 9, 1, 3, 6, 3, 5, 7, 5, 1], 6);
+    function ww(a) {
+        let total = a;
+        function inner(a) {
+            total += a;
+        }
+        inner.toString = () => total;
+        return inner;
+    }
+    console.log('ret=' + ww(1))
+    console.log('ret=' + ww(2))
+    console.log('ret=' + ww(3))
+
+    function counts(key) {
+        if (!counts.map) counts.map = {}
+        const map = counts.map
+        const count = map[key] = !!map[key] ? map[key] + 1 : 1
+        return () => {
+            return count
+        }
+    }
+
+    const countA = counts('A')
+    const countB = counts('B')
+    const countC = counts('A')
+    console.log(countA())
+    console.log(countB())
+    console.log(countC())
+    console.log(counts.map)
+}
+quantCast();
+//找两个object的不同
+function f() {
+    function f(data, scb, ecb) {
+        if(success) 
+            scb(data);
+        else
+            ecb(data);
+    }
+    function retry(n, data, scb, ecb) {
+        function wrapperEcb(data) {
+            n--;
+            if (n == 0) {
+                ecb(data)
+            } else {
+                f(data, scb, wrapperEcb)
+            }
+        }
+        f(data, scb, wrapperEcb)
+    }
+    function parseQuery(str) {
+        const q = str.lastIndexOf('?')
+        const ret = {}
+        if (q < 0) return ret
+        const query = str.substring(q + 1)
+        query.split('&').forEach(query => {
+            let [key, value] = query.split('=')
+            const frame = value.indexOf('#')
+            if (frame > 0) value = value.substring(0, frame)
+            if (!ret[key]) ret[key] = value
+            else if (ret[key]) {
+                if (Array.isArray(ret[key])) ret[key].push(value)
+                else ret[key] = [ret[key], value]
+            }
+        })
+        console.log(ret)
+    }
+    parseQuery('http://www.linkedin.com?q1=v1&q2=v2#xxx&q1=v4')
+    const v = Array.from([{skill: 'javascript', user: 'user1'}, {skill: 'css', user: 'user2'}, 
+    {skill: 'html', user: 'user3'}, {skill: 'javascript', user: 'user2'}, 
+    {skill: 'css', user: 'user3'}, {skill: 'javascript', user: 'user3'}]
+    .reduce((m, cur) => {
+        if (!m.get(cur.skill)) m.set(cur.skill, {skill: cur.skill, users: [], count: 0})
+        m.get(cur.skill).users.push(cur.user)
+        m.get(cur.skill).count++
+        return m
+    }, new Map()).values()).sort((a, b) => b.count - a.count)
+    console.log(v)
+    function* flat(args) {
+        for (const arg of args) {
+            Array.isArray(arg) ? yield * flat(arg) : yield arg
+        }
+    }
+    console.log([...flat([1, [2, 3], [4, 5, [6], [7, [8, [9]]]]])])
+}
+f()
+function ladderLength(begin, end, dict) {
+    dict = new Set(dict)
+    const lenMap = { [begin] : null }
+    const q = [begin]
+    while (q.length) {
+        const word = q.pop()
+        for (let i = 0; i < word.length; i++) {
+            for (let j = 'a'.charCodeAt(0); j <= 'z'.charCodeAt(0); j++) {
+                const newWord = word.slice(0, i) + String.fromCharCode(j) + word.slice(i + 1)
+                if (newWord === end) {
+                    const ret = [word, end]
+                    let p = lenMap[word]
+                    while (!!p) {
+                        ret.unshift(p)
+                        p = lenMap[p]
+                    }
+                    return ret
+                }
+                if (dict.has(newWord) && !lenMap[newWord]) {
+                    lenMap[newWord] = word
+                    q.push(newWord)
+                }
+            }
+        }
+    }
+    return ''
+}
+function ladderLength2(begin, end, dict) {
+    let minLength = Number.MAX_VALUE
+    dict = new Set(dict)
+    const visited = new Set()
+    const path = []
+    let ret = []
+    function dfs(word) {
+        if (word === end) {
+          if (path.length + 1 < minLength) {
+            minLength = path.length + 1
+            ret = []
+            ret.push([...path, end])
+          } else if (path.length + 1 === minLength) {
+            ret.push([...path, end])
+          }
+          return
+        }
+        visited.add(word)
+        path.push(word)
+        for (let i = 0; i < word.length; i++) {
+            for (let j = 'a'.charCodeAt(0); j <= 'z'.charCodeAt(0); j++) {
+                const newWord = word.slice(0, i) + String.fromCharCode(j) + word.slice(i + 1)
+                if (dict.has(newWord) && !visited.has(newWord)) {
+                    dfs(newWord)
+                }
+            }
+        }
+        visited.delete(word)
+        path.pop()
+    }
+    dfs(begin)
+    return ret
+}
+console.log(ladderLength2('hit', 'cog', ['hot', 'dot', 'dog', 'lot', 'log', 'cog']))
+console.log(ladderLength('hit', 'cog', ['hot', 'dot', 'dog', 'lot', 'log', 'cog']))
+function calcuate(str) {
+    let ret = 0, tmp = 0, op = '+'
+    //let a = b = null
+    for (let i = 0; i <= str.length; i++) {
+        const c = str[i]
+        if (c === ' ') continue
+        if (Number.isInteger(+c)) {
+            tmp = 10 * tmp + (+c)
+        } else {
+            if (op === '+') ret += tmp
+            else if (op === '-') ret -= tmp
+            tmp = 0
+            op = c
+        }
+    }
+    return ret
+}
+console.log(calcuate(' 22-10 + 20 '), eval(' 22-10 + 20 '))
+console.log(calcuate('1+4+5+2-3+6+8'), eval('1+4+5+2-3+6+8'))
+function calcuate2(str) {
+    let ret = 0, tmp = 0, op = '+', mult = null
+    for (let i = 0; i <= str.length; i++) {
+        const c = str[i]
+        if (c === ' ') continue
+        if (Number.isInteger(+c)) {
+            tmp = 10 * tmp + (+c)
+        } else {
+            if (op === '*') {
+                mult *= tmp
+            }
+            if (['+', '-', undefined].includes(c)) {
+                if (op === '*') ret += mult
+                else if (op === '+') ret += tmp
+                else ret -= tmp
+                mult = null
+            } else if (!mult) {
+                mult = tmp
+            }
+            op = c
+            tmp = 0
+        }
+    }
+    return ret
+}
+console.log(calcuate2('3*9+2*2-7+6*2*4'), eval('3*9+2*2-7+6*2*4'))
+function zigZagconveresion(str, k) {
+    const ret = Array(k).fill(1).map(_ => [])
+    let n = 0
+    while ( n < str.length) {
+        for (let i = 0; i < k && n < str.length; i++) {
+            ret[i].push(str[n++])
+        }
+        for (let i = k - 2; i >= 1 && n < str.length; i--) {
+            ret[i].push(str[n++])
+        }
+    }
+    return ret.map(row => row.join('')).join('')
+}
+console.log(zigZagconveresion('PAYPALISHIRING', 3))
+console.log(zigZagconveresion('0123456789ABCDEF', 3))
+console.log(zigZagconveresion('0123456789ABCDEF', 2))
+//5. 单词梯子1.5，输出一条路径。follow up是不能用BFS，怎么改进。
+//2. 给一个integer data stream，让设计数据结构，可以实时知道某个数是第几大。
+//top k elements，没写代码，三种方法做，地里有面经以前的人考过，很详细的分析时间空间复杂度，
+//比如hashmap 的size是K 也得考虑进去
+//举个例子 a=b c=d a!=c 这个是不矛盾的 a=b c=d a!=c a=c 这个就是矛盾的
+//我给出的做法就是union find follow up就是优化 复杂度什么的
+//top k smallest elements in the 2d sorted matrix  每一行每一列都分别sort
+//给一个BST，求输出所有root to leaf的depth的平均值。recursive & iterative
+//longest increase subarray
+//说是有很多很多信号塔，信号塔之间强度和信号塔之间距离成正比，问求A塔到B塔的最少信号or距离，
+//lz用的类似A＊的做法做的，小哥认可了，主要考点在于bfs怎么找出下一个塔，小哥是用半径画圆filter掉不可能的点，
+//我是用heuristic 先估算再每次在candidates里面找

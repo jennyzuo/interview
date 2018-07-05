@@ -195,6 +195,32 @@
             
                 return false;
             };
+            const throttle = function (func, limit) {
+                let lastEventTimestamp = null
+                return function (...args) {
+                    const self = this, now = Date.now();
+                    if (!lastEventTimestamp || now - lastEventTimestamp >= limit) {
+                        lastEventTimestamp = now;
+                        func.apply(self, args);
+                    }
+                };
+            };
+            const debounce = (func, delay) => {
+                let inDebounce
+                return function(...args) {
+                    clearTimeout(inDebounce);
+                    inDebounce = setTimeout(() => func.apply(this, args), delay);
+                }
+            }
+            const inputs = document.querySelectorAll('input[name="name"]');
+            const ps = document.querySelectorAll('input[name="name"] + p');
+            function handler(e, i) {
+                ps[i].innerHTML = inputs[i].value;
+            }
+            //input.addEventListener('keyup', debounce(handler, 1000));
+            inputs.forEach((input, index) => {
+                input.addEventListener('keyup', debounce(e => handler(e, index), 1000));
+            });
         };
 
         function loadXMLDoc() {
@@ -209,7 +235,15 @@
             xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
             xhttp.send();
         }
+        
     </script>
+    <input type="text" name="name" placeholder="Yong" />
+    <p></p>
+    <input type="text" name="name" placeholder="Yong" />
+    <p></p>
+    <input type="text" name="name" placeholder="Yong" />
+    <p></p>
+
 
 </body>
 
